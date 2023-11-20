@@ -1,0 +1,24 @@
+{
+  "name": "pokemon-battle-layout",
+  "version": "1.0.0",
+  "description": "pokemon battle layout creator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chickyky/pokemon-battle-layout.git"
+  },
+  "keywords": [
+    "pokemon",
+    "battle",
+    "layout"
+  ],
+  "author": "Chickyky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chickyky/pokemon-battle-layout/issues"
+  },
+  "homepage": "https://github.com/Chickyky/pokemon-battle-layout#readme"
+}
