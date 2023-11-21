@@ -3,4 +3,5 @@ export interface IBuilder {
 	setBackground(): void;
 	setTrainner(): void;
 	setPokemon(): void;
+	render(): void;
 }

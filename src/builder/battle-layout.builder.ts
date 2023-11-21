@@ -6,4 +6,5 @@ export class BattleLayoutBuilder implements IBuilder {
 	setBackground() {}
 	setTrainner() {}
 	setPokemon() {}
+	render() {}
 }
