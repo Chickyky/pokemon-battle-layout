@@ -10,9 +10,15 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@builder/*": ["src/builder/*"],
+      "@components/*": ["src/components/*"],
+      "@resources/*": ["src/resources/*"]
+    }
   },
   "include": [
     "src/",

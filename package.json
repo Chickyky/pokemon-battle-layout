@@ -14,8 +14,8 @@
     "pretest": "npm run compile",
     "posttest": "npm run lint",
     "dev": "tsc -w",
-    "copyfiles": "npx copyfiles -u 2 -e \"src/resources/**/*\" dist/resources",
-    "resources": "cp -r src/resources/**/* dist/resources",
+    "resources": "npx copyfiles -u 2 \"src/resources/**/*\" dist/resources",
+    "cp_resources": "cp -r src/resources/**/* dist/resources",
     "remove": "rimraf dist"
   },
   "repository": {

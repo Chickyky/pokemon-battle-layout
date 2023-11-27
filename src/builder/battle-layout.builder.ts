@@ -6,13 +6,15 @@ import { promisify } from 'node:util';
 
 import { IBuilder } from './builder.interface';
 
+import { Background } from '@/components';
+
 const gm = require('gm');
 
 export class BattleLayoutBuilder implements IBuilder {
-	private readonly canvas: Canvas;
-	private readonly ctx: CanvasRenderingContext2D;
-	private readonly width: number;
-	private readonly height: number;
+	private canvas: Canvas;
+	private ctx: CanvasRenderingContext2D;
+	private width: number;
+	private height: number;
 
 	constructor(width: number, height: number) {
 		this.width = width;
@@ -25,22 +27,20 @@ export class BattleLayoutBuilder implements IBuilder {
 
 	reset() {}
 
-	async setBackground() {
-		const bgAddress = path.join(__dirname, '../resources/PBS.png');
-		const toBuffer = (): Promise<Buffer> => {
-			return new Promise((resolve, reject) => {
-				gm(bgAddress).resize(this.width, this.height).toBuffer('PNG', (err: any, buffer: Buffer) => {
-					if (err) return reject(err);
-					return resolve(buffer);
-				})
-			})
-		}
-
+	async setBackground(background: Background) {
 		try {
-			const bufferImg = await toBuffer();
+			// @ts-ignore
+			const { width, height } = await background.size();
+			const bufferImg = await background.toBuffer();
 			const image = await loadImage(bufferImg);
 
+			this.width = width;
+			this.height = height;
+			this.canvas = createCanvas(width, height);
+			this.ctx = this.canvas.getContext('2d');
+
 			this.ctx.drawImage(image, 0, 0);
+			this.drawBorder(this.width, this.height, 5);
 		} catch (err) {
 			console.log('err=', err)
 		}
