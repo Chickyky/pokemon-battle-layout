@@ -8,11 +8,15 @@
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
+    "build": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "copyfiles": "npx copyfiles -u 2 -e \"src/resources/**/*\" dist/resources",
+    "resources": "cp -r src/resources/**/* dist/resources",
+    "remove": "rimraf dist"
   },
   "repository": {
     "type": "git",
@@ -30,12 +34,14 @@
   },
   "homepage": "https://github.com/Chickyky/pokemon-battle-layout#readme",
   "devDependencies": {
-    "@types/node": "20.8.2",
+    "@types/node": "^20.8.2",
+    "copyfiles": "^2.4.1",
     "gts": "^5.2.0",
     "typescript": "~5.2.0"
   },
   "dependencies": {
     "canvas": "^2.11.2",
-    "gm": "^1.25.0"
+    "gm": "^1.25.0",
+    "rimraf": "^5.0.5"
   }
 }

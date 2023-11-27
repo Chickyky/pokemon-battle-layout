@@ -1,5 +1,10 @@
-const lib = require('./dist');
+const { BattleLayoutBuilder } = require('./dist');
 
-const str = lib.hello('Chickyky');
 
-console.log('str=', str);
+;(async function main() {
+	const builder = new BattleLayoutBuilder(400, 400);
+
+	await builder.setBackground();
+
+	builder.renderImage(`${__dirname}/test.png`);
+})();
