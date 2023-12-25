@@ -1,9 +1,9 @@
-import { Background } from '@/components';
+import { Environment, Trainer, Pokemon } from '@/components';
 
 export interface IBuilder {
 	reset(): void;
-	setBackground(bg: Background): void;
-	setTrainner(): void;
-	setPokemon(): void;
+	setEnvironment(env: Environment): void;
+	setTrainer(trainer: Trainer): void;
+	setPokemon(pokeon: Pokemon): void;
 	render(): void;
 }

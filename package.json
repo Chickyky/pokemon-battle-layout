@@ -42,6 +42,13 @@
   "dependencies": {
     "canvas": "^2.11.2",
     "gm": "^1.25.0",
+    "module-alias": "^2.2.3",
     "rimraf": "^5.0.5"
+  },
+  "_moduleAliases": {
+    "@": "dist",
+    "@builder": "dist/builder",
+    "@components": "dist/components",
+    "@resources": "dist/resources"
   }
 }

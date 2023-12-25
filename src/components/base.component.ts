@@ -10,7 +10,7 @@ export class BaseComponent {
 		})
 	}
 
-	size(imgAddress: string) {
+	size(imgAddress: string): Promise<{ width: number, height: number }> {
 		return new Promise((resolve, reject) => {
 			gm(imgAddress).size((err: any, value: any) => {
 				if (err) return reject(err);
