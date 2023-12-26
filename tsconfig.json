@@ -16,7 +16,9 @@
     "paths": {
       "@/*": ["src/*"],
       "@builder/*": ["src/builder/*"],
+      "@components": ["src/components/index"],
       "@components/*": ["src/components/*"],
+      "@helpers": ["src/helpers"],
       "@resources/*": ["src/resources/*"]
     }
   },
