@@ -7,8 +7,10 @@ import { promisify } from 'node:util';
 import { IBuilder } from './builder.interface';
 
 import { Background } from '@/components';
+import { resourceResolve } from '../helpers';
 
 const gm = require('gm');
+const dirTree = require('directory-tree');
 
 export class BattleLayoutBuilder implements IBuilder {
 	private canvas: Canvas;
@@ -65,5 +67,15 @@ export class BattleLayoutBuilder implements IBuilder {
 	  this.ctx.strokeStyle = 'red';
 	  this.ctx.lineWidth = borderWidth;
 	  this.ctx.strokeRect(0, 0, width, height);
+	}
+
+	getResourceTree() {
+		const resourcePath = resourceResolve();
+
+		console.log('resourcePath=', resourcePath);
+
+		return dirTree(resourcePath, {
+		  extensions: /\.(png|jpg|jpeg)$/
+		});
 	}
 }

@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "canvas": "^2.11.2",
+    "directory-tree": "^3.5.1",
     "gm": "^1.25.0",
     "rimraf": "^5.0.5"
   }
