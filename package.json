@@ -16,7 +16,8 @@
     "dev": "tsc -w",
     "resources": "npx copyfiles -u 2 \"src/resources/**/*\" dist/resources",
     "cp_resources": "cp -r src/resources/**/* dist/resources",
-    "remove": "rimraf dist"
+    "remove": "rimraf dist",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -37,14 +38,18 @@
     "@types/node": "^20.8.2",
     "copyfiles": "^2.4.1",
     "gts": "^5.2.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^5.0.5",
     "typescript": "~5.2.0"
   },
   "dependencies": {
     "canvas": "^2.11.2",
     "directory-tree": "^3.5.1",
     "gm": "^1.25.0",
-    "module-alias": "^2.2.3",
-    "rimraf": "^5.0.5"
+    "module-alias": "^2.2.3"
+  },
+  "engines": {
+    "node": ">=20.0.0 <22.0.0"
   },
   "_moduleAliases": {
     "@": "dist",

@@ -1,6 +1,3 @@
-
 export class BattleLayoutDirector {
-	construct(builder: any) {
-
-	}
+  construct(builder: any) {}
 }

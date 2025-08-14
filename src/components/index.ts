@@ -1,4 +1,4 @@
-require('module-alias/register')
+require('module-alias/register');
 
 export * from './environment.component';
 export * from './pokemon.component';

@@ -1,19 +1,19 @@
-import { BaseComponent } from './base.component';
+import {BaseComponent} from './base.component';
 
-import { resourceResolve } from '../helpers';
+import {resourceResolve} from '../helpers';
 
 export class Environment extends BaseComponent {
-	private environmentPath = resourceResolve('environment/backgrounds/0/0.png');
+  private environmentPath = resourceResolve('environment/backgrounds/0/0.png');
 
-	constructor() {
-		super();
-	}
+  constructor() {
+    super();
+  }
 
-	size() {
-		return super.size(this.environmentPath);
-	}
+  size() {
+    return super.size(this.environmentPath);
+  }
 
-	toBuffer(): Promise<Buffer> {
-		return super.toBuffer(this.environmentPath);
-	}
+  toBuffer(): Promise<Buffer> {
+    return super.toBuffer(this.environmentPath);
+  }
 }

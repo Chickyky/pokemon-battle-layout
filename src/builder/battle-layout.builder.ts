@@ -1,183 +1,221 @@
-require('module-alias/register')
+require('module-alias/register');
 
-import { createCanvas, loadImage } from 'canvas';
-import { Canvas, CanvasRenderingContext2D, Image } from 'canvas/types';
+import {createCanvas, loadImage} from 'canvas';
+import {Canvas, CanvasRenderingContext2D, Image} from 'canvas/types';
 import * as fs from 'fs';
 import * as path from 'path';
-import { promisify } from 'node:util';
+import {promisify} from 'node:util';
 
-import { IBuilder } from './builder.interface';
-import { Environment, Trainer, Pokemon, BaseCircle } from '@components';
+import {IBuilder} from './builder.interface';
+import {Environment, Trainer, Pokemon, BaseCircle} from '@components';
 
-import { resourceResolve } from '../helpers';
+import {resourceResolve} from '../helpers';
 
 const gm = require('gm');
 const dirTree = require('directory-tree');
 
 export class BattleLayoutBuilder implements IBuilder {
-	private canvas: Canvas;
-	private ctx: CanvasRenderingContext2D;
-	private width: number = 400;
-	private height: number = 400;
+  private canvas: Canvas;
+  private ctx: CanvasRenderingContext2D;
+  private width: number = 400;
+  private height: number = 400;
 
-	// trainer
-	private positions: any = {};
+  private baseCircle: BaseCircle;
+  private competitorBaseCircle: BaseCircle;
+  private environment: Environment;
+  private trainer: Trainer | undefined;
+  private pokemon: Pokemon | undefined;
+  private competitorTrainer: Trainer | undefined;
+  private competitorPokemon: Pokemon | undefined;
 
-	constructor() {
-		this.canvas = createCanvas(this.width, this.height);
-		this.ctx = this.canvas.getContext('2d');
+  // trainer
+  private positions: any = {};
 
-		this.drawBorder(this.width, this.height, 5);
-	}
+  constructor() {
+    this.canvas = createCanvas(this.width, this.height);
+    this.ctx = this.canvas.getContext('2d');
 
-	reset() {}
+    this.drawBorder(this.width, this.height, 5);
 
-	async setEnvironment(environment: Environment) {
-		try {
-			// @ts-ignore
-			const { width, height } = await environment.size();
-			const bufferImg = await environment.toBuffer();
-			const image = await loadImage(bufferImg);
+    this.environment = new Environment();
+    this.baseCircle = new BaseCircle();
+    this.competitorBaseCircle = new BaseCircle({isCompetitor: true});
+  }
 
-			this.width = width;
-			this.height = height;
-			this.canvas = createCanvas(width, height);
-			this.ctx = this.canvas.getContext('2d');
+  async prepare() {
+    await this.setEnvironment(this.environment);
+    // draw base-circle
+    await this.setSelfBaseCircle(this.baseCircle);
+    await this.setCompetitorBaseCircle(this.competitorBaseCircle);
+  }
 
-			this.ctx.drawImage(image, 0, 0);
-			// this.drawBorder(this.width, this.height, 5);
+  reset() {}
 
-			// draw base-circle
-			await this.setSelfBaseCircle();
-			await this.setEnemyBaseCircle();
-		} catch (err) {
-			console.log('setEnvironment err=', err);
-		}
-	}
+  async setEnvironment(environment: Environment) {
+    try {
+      this.environment = environment;
 
-	async setTrainer(trainer: Trainer) {
-		if (trainer.isEnemy) return this.setEnemyTrainer(trainer);
+      // @ts-ignore
+      const {width, height} = await environment.size();
+      const bufferImg = await environment.toBuffer();
+      const image = await loadImage(bufferImg);
 
-		return this.setSelfTrainer(trainer);
-	}
+      this.width = width;
+      this.height = height;
+      this.canvas = createCanvas(width, height);
+      this.ctx = this.canvas.getContext('2d');
 
-	async setSelfTrainer(trainer:  Trainer) {
-		const bufferImg = await trainer.toBuffer();
-		const image = await loadImage(bufferImg);
-		const { width: trainerW, height: trainerH } = await trainer.size();
+      this.ctx.drawImage(image, 0, 0);
+      // this.drawBorder(this.width, this.height, 5);
+    } catch (err) {
+      console.log('setEnvironment err=', err);
+    }
+  }
 
-		const padding = 0;
-		let xPos = 0;
-		let yPos = this.height - trainerH - padding;
+  async setTrainer(trainer: Trainer) {
+    if (trainer.isCompetitor) return this.setCompetitorTrainer(trainer);
 
-		this.ctx.drawImage(image, xPos, yPos);
+    return this.setSelfTrainer(trainer);
+  }
 
-		this.positions.trainer = { x: xPos, y: yPos, w: trainerW, h: trainerH };
-	}
+  async setSelfTrainer(trainer: Trainer) {
+    this.trainer = trainer;
 
-	async setEnemyTrainer(trainer: Trainer) {
-		const bufferImg = await trainer.toBuffer();
-		const image = await loadImage(bufferImg);
-		const { width: trainerW, height: trainerH } = await trainer.size();
+    const bufferImg = await this.trainer.toBuffer();
+    const image = await loadImage(bufferImg);
+    const {width: trainerW, height: trainerH} = await this.trainer.size();
 
-		const padding = 0;
-		let xPos = this.width - trainerW - padding;
-		let yPos = 0;
+    const padding = 0;
+    let xPos = 0;
+    let yPos = this.height - trainerH - padding;
 
-		this.ctx.drawImage(image, xPos, yPos);
+    this.ctx.drawImage(image, xPos, yPos);
 
-		this.positions.trainerEnemy = { x: xPos, y: yPos, w: trainerW, h: trainerH };
-	}
+    this.positions.trainer = {x: xPos, y: yPos, w: trainerW, h: trainerH};
+  }
 
-	async setPokemon(pokemon: Pokemon) {
-		if (pokemon.isEnemy) return this.setEnemyPokemon(pokemon);
+  async setCompetitorTrainer(trainer: Trainer) {
+		this.competitorTrainer = trainer;
 
-		return this.setSelfPokemon(pokemon);
-	}
+    const bufferImg = await trainer.toBuffer();
+    const image = await loadImage(bufferImg);
+    const {width: trainerW, height: trainerH} = await this.competitorTrainer.size();
 
-	async setSelfPokemon(pokemon: Pokemon) {
-		const bufferImg = await pokemon.toBuffer();
-		const image = await loadImage(bufferImg);
-		const { width: pkmW, height: pkmH } = await pokemon.size();
-		const { x: trainerX, y: trainerY, w: trainerW, h: trainerH } = this.positions.trainer;
+    const padding = 0;
+    let xPos = this.width - trainerW - padding;
+    let yPos = 0;
 
-		const padding = 20;
-		let xPos = 0 + trainerW - padding;
-		let yPos = this.height - pkmH + 20;
+    this.ctx.drawImage(image, xPos, yPos);
 
-		this.ctx.drawImage(image, xPos, yPos);
-	}
+    this.positions.trainerEnemy = {x: xPos, y: yPos, w: trainerW, h: trainerH};
+  }
 
-	async setEnemyPokemon(pokemon: Pokemon) {
-		const bufferImg = await pokemon.toBuffer();
-		const image = await loadImage(bufferImg);
-		const { width: pkmW, height: pkmH } = await pokemon.size();
-		const { x: trainerX, y: trainerY, w: trainerW, h: trainerH } = this.positions.trainerEnemy;
+  async setPokemon(pokemon: Pokemon) {
+    if (pokemon.isCompetitor) return this.setCompetitorPokemon(pokemon);
 
-		console.log('this.positions.trainerEnemy=', this.positions.trainerEnemy)
+    return this.setSelfPokemon(pokemon);
+  }
 
-		const padding = 20;
-		let xPos = trainerX - pkmW + 40;
-		let yPos = 0;
+  async setSelfPokemon(pokemon: Pokemon) {
+		this.pokemon = pokemon;
 
-		this.ctx.drawImage(image, xPos, yPos);
+    const bufferImg = await this.pokemon.toBuffer();
+    const image = await loadImage(bufferImg);
+    const {width: pkmW, height: pkmH} = await this.pokemon.size();
+    const {
+      x: trainerX,
+      y: trainerY,
+      w: trainerW,
+      h: trainerH,
+    } = this.positions.trainer;
 
-		this.positions.pokemonEnemy = { x: xPos, y: yPos, w: pkmW, h: pkmH };
-	}
+    const padding = 20;
+    let xPos = 0 + trainerW - padding;
+    let yPos = this.height - pkmH + 20;
 
-	async setEnemyBaseCircle() {
-		const baseCircle = new BaseCircle({ isEnemy: true 	});
-		const bufferBase = await baseCircle.toBuffer();
-		const imgBase = await loadImage(bufferBase);
-		const { width: baseW, height: baseH } = await baseCircle.size();
-		// const { x: pkmX, y: pkmY, w: pkmW, h: pkmH } = this.positions.pokemonEnemy;
+    this.ctx.drawImage(image, xPos, yPos);
+  }
 
-		const padding = -20;
-		let xPos = this.width - baseW - 10;
-		let yPos = 40;
+  async setCompetitorPokemon(pokemon: Pokemon) {
+		this.competitorPokemon = pokemon;
 
-		this.ctx.drawImage(imgBase, xPos, yPos);
-	}
+    const bufferImg = await this.competitorPokemon.toBuffer();
+    const image = await loadImage(bufferImg);
+    const {width: pkmW, height: pkmH} = await this.competitorPokemon.size();
+    const {
+      x: trainerX,
+      y: trainerY,
+      w: trainerW,
+      h: trainerH,
+    } = this.positions.trainerEnemy;
 
-	async setSelfBaseCircle () {
-		const baseCircle = new BaseCircle();
-		const bufferBase = await baseCircle.toBuffer();
-		const imgBase = await loadImage(bufferBase);
-		const { width: baseW, height: baseH } = await baseCircle.size();
+    console.log('this.positions.trainerEnemy=', this.positions.trainerEnemy);
 
-		const padding = -20;
-		let xPos = 0 + padding;
-		let yPos = this.height - baseH;
+    const padding = 20;
+    let xPos = trainerX - pkmW + 40;
+    let yPos = 0;
 
-		this.ctx.drawImage(imgBase, xPos, yPos);
-	}
+    this.ctx.drawImage(image, xPos, yPos);
 
-	render() {}
+    this.positions.pokemonEnemy = {x: xPos, y: yPos, w: pkmW, h: pkmH};
+  }
 
-	renderImage(fileAddress: string) {
-		console.log('render ...', fileAddress);
+  async setCompetitorBaseCircle(baseCircle: BaseCircle) {
+    this.competitorBaseCircle = baseCircle;
 
-		const out = fs.createWriteStream(fileAddress);
-		const stream = this.canvas.createPNGStream();
+    const bufferBase = await this.competitorBaseCircle.toBuffer();
+    const imgBase = await loadImage(bufferBase);
+    const {width: baseW, height: baseH} =
+      await this.competitorBaseCircle.size();
+    // const { x: pkmX, y: pkmY, w: pkmW, h: pkmH } = this.positions.pokemonEnemy;
 
-		stream.pipe(out)
-		out.on('finish', () =>  console.log('The PNG file was created.'))
-		// console.log('dataURL:', this.canvas.toDataURL())
-	}
+    const padding = -20;
+    let xPos = this.width - baseW - 10;
+    let yPos = 40;
 
-	drawBorder(width: number, height: number, borderWidth: number = 1) {
-	  this.ctx.strokeStyle = 'red';
-	  this.ctx.lineWidth = borderWidth;
-	  this.ctx.strokeRect(0, 0, width, height);
-	}
+    this.ctx.drawImage(imgBase, xPos, yPos);
+  }
 
-	getResourceTree() {
-		const resourcePath = resourceResolve();
+  async setSelfBaseCircle(baseCircle: BaseCircle) {
+    this.baseCircle = baseCircle;
 
-		console.log('resourcePath=', resourcePath);
+    const bufferBase = await this.baseCircle.toBuffer();
+    const imgBase = await loadImage(bufferBase);
+    const {width: baseW, height: baseH} = await this.baseCircle.size();
 
-		return dirTree(resourcePath, {
-		  extensions: /\.(png|jpg|jpeg)$/
-		});
-	}
+    const padding = -20;
+    let xPos = 0 + padding;
+    let yPos = this.height - baseH;
+
+    this.ctx.drawImage(imgBase, xPos, yPos);
+  }
+
+  render() {}
+
+  renderImage(fileAddress: string) {
+    console.log('render ...', fileAddress);
+
+    const out = fs.createWriteStream(fileAddress);
+    const stream = this.canvas.createPNGStream();
+
+    stream.pipe(out);
+    out.on('finish', () => console.log('The PNG file was created.'));
+    // console.log('dataURL:', this.canvas.toDataURL())
+  }
+
+  drawBorder(width: number, height: number, borderWidth: number = 1) {
+    this.ctx.strokeStyle = 'red';
+    this.ctx.lineWidth = borderWidth;
+    this.ctx.strokeRect(0, 0, width, height);
+  }
+
+  getResourceTree() {
+    const resourcePath = resourceResolve();
+
+    console.log('resourcePath=', resourcePath);
+
+    return dirTree(resourcePath, {
+      extensions: /\.(png|jpg|jpeg)$/,
+    });
+  }
 }
