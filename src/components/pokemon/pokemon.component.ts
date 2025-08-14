@@ -1,6 +1,6 @@
-import {BaseComponent} from './base.component';
+import {BaseComponent} from '../base.component';
 
-import {resourceResolve} from '../helpers';
+import {resourceResolve} from '../../helpers';
 
 export class Pokemon extends BaseComponent {
   public isCompetitor: boolean = false;

@@ -1,18 +1,11 @@
-require('module-alias/register');
+import { createCanvas, loadImage } from 'canvas';
+import { Canvas, CanvasRenderingContext2D } from 'canvas/types';
+import fs from 'fs';
+import dirTree from 'directory-tree';
 
-import {createCanvas, loadImage} from 'canvas';
-import {Canvas, CanvasRenderingContext2D, Image} from 'canvas/types';
-import * as fs from 'fs';
-import * as path from 'path';
-import {promisify} from 'node:util';
-
-import {IBuilder} from './builder.interface';
-import {Environment, Trainer, Pokemon, BaseCircle} from '@components';
-
-import {resourceResolve} from '../helpers';
-
-const gm = require('gm');
-const dirTree = require('directory-tree');
+import { IBuilder } from './builder.interface';
+import { Environment, Trainer, Pokemon, BaseCircle } from '@components';
+import { resourceResolve } from '@/helpers';
 
 export class BattleLayoutBuilder implements IBuilder {
   private canvas: Canvas;
@@ -211,8 +204,6 @@ export class BattleLayoutBuilder implements IBuilder {
 
   getResourceTree() {
     const resourcePath = resourceResolve();
-
-    console.log('resourcePath=', resourcePath);
 
     return dirTree(resourcePath, {
       extensions: /\.(png|jpg|jpeg)$/,

@@ -20,9 +20,9 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon } = require('./dist')
 
 	builder.renderImage(`${__dirname}/test.png`);
 
-	const tree = builder.getResourceTree();
-	const characters = tree.children.find(c => c.name === 'characters');
-	console.log('characters=', characters);
+	// const tree = builder.getResourceTree();
+	// const characters = tree.children.find(c => c.name === 'characters');
+	// console.log('characters=', characters);
 
 	/* const trainers = characters.children.find(c => c.name === 'trainers');
 	console.log('trainers=', trainers);
