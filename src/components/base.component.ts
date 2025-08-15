@@ -1,4 +1,4 @@
-const gm = require('gm');
+import gm from 'gm';
 
 export class BaseComponent {
   toBuffer(imgAddress: string): Promise<Buffer> {

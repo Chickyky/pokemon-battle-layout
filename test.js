@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const { BattleLayoutBuilder, Environment, Trainer, Pokemon } = require('./dist');
 
 ;(async function main() {
@@ -9,9 +7,10 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon } = require('./dist')
 	const pokemon = new Pokemon();
 	const competitorPokemon = new Pokemon({ isCompetitor: true });
 
-	const builder = new BattleLayoutBuilder(800, 800);
+	/* const builder = new BattleLayoutBuilder(800, 800);
+	await builder.prepare(); */
 
-	await builder.prepare();
+	const builder = await BattleLayoutBuilder.create();
 
 	await builder.setTrainer(trainer);
 	await builder.setTrainer(competitorTrainer);
@@ -19,25 +18,6 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon } = require('./dist')
 	await builder.setPokemon(competitorPokemon);
 
 	builder.renderImage(`${__dirname}/test.png`);
-
-	// const tree = builder.getResourceTree();
-	// const characters = tree.children.find(c => c.name === 'characters');
-	// console.log('characters=', characters);
-
-	/* const trainers = characters.children.find(c => c.name === 'trainers');
-	console.log('trainers=', trainers);
-
-	const trainerFronts = trainers.children.find(c => c.name === 'front');
-	console.log('trainerFronts=', trainerFronts);
-
-	const facility = trainerFronts.children.find(c => c.name === 'Facility');
-	console.log('facility=', facility);
-
-	const facility_0 = facility.children.find(c => c.name === '0');
-	console.log('facility_0=', facility_0);
-
-	const bw2 = facility_0.children.find(c => c.name === 'bw2');
-	console.log('bw2=', bw2); */
 })();
 
 

@@ -7,20 +7,27 @@ import { IBuilder } from './builder.interface';
 import { Environment, Trainer, Pokemon, BaseCircle } from '@components';
 import { resourceResolve } from '@/helpers';
 
+// TODO: update all function set component for builder to sync
+// TODO: add interface for options
+// TODO: add more resolutions and render image (buffer/base64/...)
+
 export class BattleLayoutBuilder implements IBuilder {
   private canvas: Canvas;
   private ctx: CanvasRenderingContext2D;
   private width: number = 400;
   private height: number = 400;
 
-  private baseCircle: BaseCircle;
-  private competitorBaseCircle: BaseCircle;
   private environment: Environment;
+
+  private baseCircle: BaseCircle;
   private trainer: Trainer | undefined;
   private pokemon: Pokemon | undefined;
+
+  private competitorBaseCircle: BaseCircle;
   private competitorTrainer: Trainer | undefined;
   private competitorPokemon: Pokemon | undefined;
 
+  // TODO: add interface
   // trainer
   private positions: any = {};
 
@@ -40,6 +47,14 @@ export class BattleLayoutBuilder implements IBuilder {
     // draw base-circle
     await this.setSelfBaseCircle(this.baseCircle);
     await this.setCompetitorBaseCircle(this.competitorBaseCircle);
+  }
+
+  static async create() {
+    const builder =  new BattleLayoutBuilder();
+
+    await builder.prepare();
+
+    return builder;
   }
 
   reset() {}

@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/Chickyky/pokemon-battle-layout#readme",
   "devDependencies": {
+    "@types/gm": "^1.25.4",
     "@types/lodash": "^4.17.20",
     "@types/node": "^20.8.2",
     "copyfiles": "^2.4.1",

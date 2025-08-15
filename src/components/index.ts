@@ -1,4 +1,4 @@
-export * from './environment.component';
-export * from './base-circle.component';
+export * from './environment';
+export * from './base-circle';
 export * from './pokemon';
-export * from './trainner';
+export * from './trainer';
