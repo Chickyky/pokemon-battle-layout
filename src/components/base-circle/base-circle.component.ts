@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Image } from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 import {BASE_CIRCLES} from '@components/resource.flat';
@@ -35,5 +36,9 @@ export class BaseCircle extends BaseComponent {
 
   toBuffer(): Promise<Buffer> {
     return super.toBuffer(this.baseCirclePath);
+  }
+
+  getImage(): Promise<Image> {
+    return super.getImage(this.baseCirclePath);
   }
 }

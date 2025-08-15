@@ -1,8 +1,8 @@
 import _ from 'lodash';
+import { Image } from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 
-import {resourceResolve} from '@/helpers';
 import { POKEMONS_FRONT, POKEMONS_BACK } from '@components/resource.flat';
 import { IPokemon } from './pokemon.interface';
 
@@ -44,5 +44,9 @@ export class Pokemon extends BaseComponent {
 
   toBuffer(): Promise<Buffer> {
     return super.toBuffer(this.imagePath);
+  }
+
+  getImage(): Promise<Image> {
+    return super.getImage(this.imagePath);
   }
 }

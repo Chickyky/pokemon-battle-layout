@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Image } from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 
@@ -53,5 +54,9 @@ export class Trainer extends BaseComponent {
 
   toBuffer(): Promise<Buffer> {
     return super.toBuffer(this.imagePath);
+  }
+
+  getImage(): Promise<Image> {
+    return super.getImage(this.imagePath);
   }
 }

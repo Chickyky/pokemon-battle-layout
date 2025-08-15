@@ -1,24 +1,22 @@
+import { Image } from 'canvas';
 import gm from 'gm';
 
+import {ImageFlyweightFactory} from '@components/image.flyweight-factory';
+
 export class BaseComponent {
-  toBuffer(imgAddress: string): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      gm(imgAddress).toBuffer('PNG', (err: any, buffer: Buffer) => {
-        if (err) return reject(err);
-        return resolve(buffer);
-      });
-    });
+  async toBuffer(imgAddress: string): Promise<Buffer> {
+    const image = await ImageFlyweightFactory.getImage(imgAddress);
+
+    return image.src as Buffer;
   }
 
-  size(imgAddress: string): Promise<{width: number; height: number}> {
-    return new Promise((resolve, reject) => {
-      gm(imgAddress).size((err: any, value: any) => {
-        if (err) return reject(err);
+  async size(imgAddress: string): Promise<{width: number; height: number}> {
+    const image = await ImageFlyweightFactory.getImage(imgAddress);
 
-        const {width, height} = value;
+    return {width: image.width, height: image.height};
+  }
 
-        return resolve({width, height});
-      });
-    });
+  async getImage(imgAddress: string): Promise<Image> {
+    return ImageFlyweightFactory.getImage(imgAddress);
   }
 }

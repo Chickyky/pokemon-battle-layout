@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Image } from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 import {ENVIRONMENTS} from '@components/resource.flat';
@@ -29,5 +30,9 @@ export class Environment extends BaseComponent {
 
   toBuffer(): Promise<Buffer> {
     return super.toBuffer(this.environmentPath);
+  }
+
+  getImage(): Promise<Image> {
+    return super.getImage(this.environmentPath);
   }
 }

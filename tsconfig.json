@@ -32,5 +32,14 @@
   "include": [
     "src/",
     "src/**/*.ts"
-  ]
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "tsconfig.tsbuildinfo"
+  ],
+  "buildOptions": {
+    "clean": true
+  }
 }
