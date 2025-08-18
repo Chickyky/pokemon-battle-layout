@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Image } from 'canvas';
+import {Image} from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 import {BASE_CIRCLES} from '@components/resource.flat';

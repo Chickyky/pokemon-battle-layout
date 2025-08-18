@@ -1,7 +1,7 @@
 export interface IBaseCircle {
-	id: string;
-	imagePath: string;
-	isCompetitor: boolean;
+  id: string;
+  imagePath: string;
+  isCompetitor: boolean;
 
-	// TODO: add field type: electric, water, fire ...
+  // TODO: add field type: electric, water, fire ...
 }

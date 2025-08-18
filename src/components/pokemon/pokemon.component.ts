@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { Image } from 'canvas';
+import {Image} from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 
-import { POKEMONS_FRONT, POKEMONS_BACK } from '@components/resource.flat';
-import { IPokemon } from './pokemon.interface';
+import {POKEMONS_FRONT, POKEMONS_BACK} from '@components/resource.flat';
+import {IPokemon} from './pokemon.interface';
 
 export class Pokemon extends BaseComponent {
   public isCompetitor: boolean = false;
@@ -32,8 +32,7 @@ export class Pokemon extends BaseComponent {
 
   randomPokemon(): IPokemon {
     const list = this.isCompetitor ? POKEMONS_FRONT : POKEMONS_BACK;
-    const pokemon = _(list)
-      .sample() as IPokemon;
+    const pokemon = _(list).sample() as IPokemon;
 
     return pokemon;
   }

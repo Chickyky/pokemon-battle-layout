@@ -1,10 +1,10 @@
-
-import { BattleLayout } from './battle-layout';
-import { IBuilder } from './builder.interface';
-import { Environment, Trainer, Pokemon, BaseCircle } from '@components';
+import {BattleLayout} from './battle-layout';
+import {IBuilder} from './builder.interface';
+import {Environment, Trainer, Pokemon, BaseCircle, TextBox} from '@components';
 
 // TODO: add interface for options
 // TODO: add more resolutions and render image (buffer/base64/...)
+// TODO: fix position render of trainer and pokemin.
 
 export class BattleLayoutBuilder implements IBuilder {
   public environment: Environment;
@@ -16,6 +16,8 @@ export class BattleLayoutBuilder implements IBuilder {
   public competitorBaseCircle: BaseCircle;
   public competitorTrainer: Trainer | undefined;
   public competitorPokemon: Pokemon | undefined;
+
+  public textbox: TextBox | undefined;
 
   constructor() {
     this.environment = new Environment();
@@ -77,15 +79,24 @@ export class BattleLayoutBuilder implements IBuilder {
     return this;
   }
 
+  setTextbox(textbox: TextBox) {
+    this.textbox = textbox;
+    return this;
+  }
+
   build(): BattleLayout {
     return new BattleLayout(
-      this.trainer,
-      this.competitorTrainer,
-      this.pokemon,
-      this.competitorPokemon,
       this.environment,
+
+      this.trainer,
+      this.pokemon,
       this.baseCircle,
-      this.competitorBaseCircle
+
+      this.competitorTrainer,
+      this.competitorPokemon,
+      this.competitorBaseCircle,
+
+      this.textbox
     );
   }
 }

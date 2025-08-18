@@ -1,4 +1,4 @@
-import { Image } from 'canvas';
+import {Image} from 'canvas';
 import gm from 'gm';
 
 import {ImageFlyweightFactory} from '@components/image.flyweight-factory';

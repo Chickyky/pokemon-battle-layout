@@ -6,6 +6,7 @@ import {ITraner, TRAINNER_DIRECTION, TRAINNER_ROLE} from './trainer';
 import {IBaseCircle} from './base-circle';
 import {IEnvironment} from './environment';
 import {IPokemon} from './pokemon';
+import {ITextBox} from './text-box';
 
 const trainerResourcePath: string = resourceResolve('characters/trainers');
 const trainerResourceDirTree = dirTree(trainerResourcePath, {
@@ -26,6 +27,11 @@ const environmentResourceDirTree = dirTree(environmentResourcePath, {
 
 const pokemonResourcePath: string = resourceResolve('pokemon');
 const pokemonResourceDirTree = dirTree(pokemonResourcePath, {
+  extensions: /\.(png|jpg|jpeg)$/,
+});
+
+const textboxResourcePath: string = resourceResolve('UI/textboxes');
+const textboxResourceDirTree = dirTree(textboxResourcePath, {
   extensions: /\.(png|jpg|jpeg)$/,
 });
 
@@ -147,11 +153,17 @@ export const ENVIRONMENTS: IEnvironment[] = _.chain(
   "name": "111.png"
 }
 */
+
+const excludeVersions = ['red-blue', 'red-green', 'yellow'];
 const POKEMONS: IPokemon[] = _.chain(pokemonResourceDirTree.children || [])
   .flatMap(flattenWithParentProps)
   .map((flattened: any) => {
     const values = _.values(flattened);
-    const version = _.get(flattened, 'parent.parent.parent.parent.name', _.get(flattened, 'parent.name', null));
+    const version = _.get(
+      flattened,
+      'parent.parent.parent.parent.name',
+      _.get(flattened, 'parent.name', null)
+    );
 
     const pokemon: IPokemon = {
       id: _.chain(flattened).get('name').split('.').head().value(),
@@ -164,7 +176,22 @@ const POKEMONS: IPokemon[] = _.chain(pokemonResourceDirTree.children || [])
 
     return pokemon;
   })
+  .filter(pokemon => !excludeVersions.includes(pokemon.version))
   .value();
 
 export const POKEMONS_FRONT = _.filter(POKEMONS, {direction: 'front'});
 export const POKEMONS_BACK = _.filter(POKEMONS, {direction: 'back'});
+
+export const TEXTBOXES: ITextBox[] = _.chain(
+  textboxResourceDirTree.children || []
+)
+  .flatMap(flattenWithParentProps)
+  .map((flattened: any) => {
+    const textbox: ITextBox = {
+      id: _.chain(flattened).get('name').split('.').head().value(),
+      imagePath: _.get(flattened, 'path'),
+    };
+
+    return textbox;
+  })
+  .value();

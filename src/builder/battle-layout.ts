@@ -1,25 +1,33 @@
-import { BaseCircle, Environment, Pokemon, Trainer } from "@/components";
+import {BaseCircle, Environment, Pokemon, TextBox, Trainer} from '@/components';
 
 export class BattleLayout {
   constructor(
-    public trainer?: Trainer,
-    public trainerCompetitor?: Trainer,
-    public pokemon?: Pokemon,
-    public pokemonCompetitor?: Pokemon,
     public environment?: Environment,
+
+    public trainer?: Trainer,
+    public pokemon?: Pokemon,
     public baseCircle?: BaseCircle,
-    public baseCircleCompetitor?: BaseCircle
+
+    public trainerCompetitor?: Trainer,
+    public pokemonCompetitor?: Pokemon,
+    public baseCircleCompetitor?: BaseCircle,
+
+    public textbox?: TextBox
   ) {}
 
   clone(): BattleLayout {
     return new BattleLayout(
-      this.trainer,
-      this.trainerCompetitor,
-      this.pokemon,
-      this.pokemonCompetitor,
       this.environment,
+
+      this.trainer,
+      this.pokemon,
       this.baseCircle,
-      this.baseCircleCompetitor
+
+      this.trainerCompetitor,
+      this.pokemonCompetitor,
+      this.baseCircleCompetitor,
+
+      this.textbox
     );
   }
 }

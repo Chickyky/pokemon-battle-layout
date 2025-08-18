@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Image } from 'canvas';
+import {Image} from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 
@@ -35,7 +35,7 @@ export class Trainer extends BaseComponent {
       this.direction,
       this.role,
       this.name,
-      this.version,
+      this.version
     );
   }
 

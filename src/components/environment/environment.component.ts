@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import { Image } from 'canvas';
+import {Image} from 'canvas';
 
 import {BaseComponent} from '@components/base.component';
 import {ENVIRONMENTS} from '@components/resource.flat';
-import { IEnvironment } from './environment.interface';
+import {IEnvironment} from './environment.interface';
 
 export class Environment extends BaseComponent {
   public id: string = '';
@@ -18,8 +18,7 @@ export class Environment extends BaseComponent {
   }
 
   randomEnvironment(): IEnvironment {
-    const env = _(ENVIRONMENTS)
-      .sample() as IEnvironment;
+    const env = _(ENVIRONMENTS).sample() as IEnvironment;
 
     return env;
   }
