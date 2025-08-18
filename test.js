@@ -1,4 +1,4 @@
-const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector, RenderService, TextBox } = require('./dist');
+const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector, RenderService, TextBox, BaseCircle } = require('./dist');
 
 ;(async function main() {
 	const trainer = new Trainer();
@@ -28,8 +28,13 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector
 	await renderer.renderImage(`${__dirname}/test.png`, layout);
 
 	builder
+		.setEnvironment(new Environment())
+		.setSelfBaseCircle(new BaseCircle())
+		.setCompetitorBaseCircle(new BaseCircle({ isCompetitor: true }))
 		.setTrainer(new Trainer())
-		.setPokemon(new Pokemon());
+		.setPokemon(new Pokemon())
+		.setTrainer(new Trainer({ isCompetitor: true }))
+		.setPokemon(new Pokemon({ isCompetitor: true }));
 
 	layout = director.constructBattle();
 
@@ -49,7 +54,7 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector
 // stream.on('finish', function () {
 //   // Process generated GIF
 // });
-	
+
 // // Alternately, you can wrap the "finish" event in a Promise
 // await new Promise((resolve, reject) => {
 //   stream.on('finish', resolve);

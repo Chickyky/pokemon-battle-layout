@@ -72,10 +72,14 @@ export class RenderService {
 
     const image = await environment.getImage();
 
+    /* const width = 800;
+    const height = 800;
+    this.canvas = createCanvas(width, height);
+    this.ctx.drawImage(image, 0, 0, width, height); */
+
     this.canvas = createCanvas(image.width, image.height);
     this.ctx = this.canvas.getContext('2d');
-
-    this.ctx.drawImage(image, 0, 0);
+    this.ctx.drawImage(image, 0, 0, image.width, image.height);
   }
   private async renderBaseSelf(baseCircle: BaseCircle) {
     if (!baseCircle) return;
@@ -201,16 +205,47 @@ export class RenderService {
     newCtx.drawImage(this.canvas, 0, 0);
     newCtx.drawImage(image, 0, heightOfCurrentCanvas);
 
-    const text = 'Hello';
-    const font = '12px "Pokemon GB"';
+    const text = `Pikachu used Thunderbolt! It's super effective against Squirtle.`;
+    const padding = 15;
+    const font = '8px "Pokemon GB"';
     const color = 'black';
     newCtx.font = font;
     newCtx.fillStyle = color;
-    newCtx.fillText(text, 10, heightOfNewCanvas - 10);
+
+    this.wrapText(newCtx, text, padding, heightOfCurrentCanvas + padding, widthOfNewCanvas - padding * 2, 10);
 
     this.canvas = newCanvas;
     this.ctx = newCtx;
   }
+
+  private wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number
+) {
+  const words = text.split(" ");
+  let line = "";
+  let currentY = y;
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, x, currentY);
+      line = words[n] + " ";
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+
+  ctx.fillText(line, x, currentY);
+}
 
   async renderImage(fileAddress: string, layout: BattleLayout) {
     console.log('render ...', fileAddress);
