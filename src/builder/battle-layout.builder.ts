@@ -1,4 +1,5 @@
 
+import { BattleLayout } from './battle-layout';
 import { IBuilder } from './builder.interface';
 import { Environment, Trainer, Pokemon, BaseCircle } from '@components';
 
@@ -74,5 +75,17 @@ export class BattleLayoutBuilder implements IBuilder {
   setSelfBaseCircle(baseCircle: BaseCircle) {
     this.baseCircle = baseCircle;
     return this;
+  }
+
+  build(): BattleLayout {
+    return new BattleLayout(
+      this.trainer,
+      this.competitorTrainer,
+      this.pokemon,
+      this.competitorPokemon,
+      this.environment,
+      this.baseCircle,
+      this.competitorBaseCircle
+    );
   }
 }
