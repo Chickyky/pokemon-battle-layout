@@ -19,3 +19,16 @@ export type RectPoints = {
 };
 
 export type Position = {x: number; y: number};
+
+export type Projectile = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  spriteIndex: number;
+};
+
+export type Velocity = {
+  vx: number;
+  vy: number;
+};

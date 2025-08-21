@@ -3,7 +3,7 @@ import {CanvasRenderingContext2D} from 'canvas';
 import {SpriteManager} from '../sprite.manager';
 import {MoveAnimator} from '../move.animator';
 import {ProjectileRenderer} from '@/renderer/projectile.renderer';
-import {CurvedTrajectory} from '../trajectories';
+import {CurvedTrajectory, LinearTrajectory} from '../trajectories';
 import { RectPoints, RectPosition } from '@/interface';
 import { getRectPoints } from '@/helpers';
 
@@ -93,8 +93,13 @@ export class RazorLeafAnimator extends MoveAnimator {
 
     const renderer = new ProjectileRenderer(
       this.spriteManager,
-      new CurvedTrajectory()
+      // new CurvedTrajectory()
+      new LinearTrajectory()
     );
+
+    // spawn 2 chiếc lá với vận tốc khác nhau
+    renderer.spawnProjectile(this.attackerRecPoints.center, 20, 10, 0);
+    renderer.spawnProjectile(this.attackerRecPoints.center, 10, 5, 0);
 
     renderer.renderProjectile(
       ctx,
