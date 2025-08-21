@@ -1,9 +1,11 @@
 import {Canvas, CanvasRenderingContext2D, createCanvas, registerFont} from 'canvas';
-import fs from 'fs';
+import GIFEncoder from "gifencoder";
+import fs from "fs";
 
 import {BattleLayout} from './battle-layout';
 import {BaseCircle, Environment, Pokemon, TextBox, Trainer} from '@/components';
 import { resourceResolve } from '@/helpers';
+import { MoveAnimator } from '@/animation';
 
 export class RenderService {
   private canvas: Canvas;
@@ -11,7 +13,7 @@ export class RenderService {
   private positions: any = {};
 
   constructor(
-    private readonly layout: BattleLayout,
+    private layout: BattleLayout,
     private width = 400,
     private height = 400
   ) {
@@ -24,6 +26,11 @@ export class RenderService {
     registerFont(fontPath, {
       family: 'Pokemon GB',
     })
+  }
+
+  setLayout(layout: BattleLayout) {
+    this.layout = layout;
+    return this;
   }
 
   async renderLayout(layout: BattleLayout, width = 400, height = 400) {
@@ -65,6 +72,13 @@ export class RenderService {
     if (layout.textbox) {
       await this.renderTextbox(layout.textbox);
     }
+
+    const result = {
+      canvas: this.canvas,
+      ctx: this.ctx
+    }
+
+    return result;
   }
 
   private async renderEnvironment(environment: Environment) {
@@ -247,12 +261,12 @@ export class RenderService {
   ctx.fillText(line, x, currentY);
 }
 
-  async renderImage(fileAddress: string, layout: BattleLayout) {
+  async renderImage(fileAddress: string) {
     console.log('render ...', fileAddress);
 
     const out = fs.createWriteStream(fileAddress);
 
-    await this.renderLayout(layout);
+    await this.renderLayout(this.layout);
 
     const stream = this.canvas.createPNGStream();
     stream.pipe(out);
@@ -265,6 +279,45 @@ export class RenderService {
       out.on('error', (err: any) => {
         reject(err);
       });
+    });
+  }
+
+  /**
+   * Render animation ra GIF
+   */
+  async renderGif(move: MoveAnimator, outputPath: string, frames = 30, delay = 100) {
+    await this.renderLayout(this.layout);
+
+    const writeStream = fs.createWriteStream(outputPath);
+    const encoder = new GIFEncoder(this.canvas.width, this.canvas.height);
+    encoder.createReadStream().pipe(writeStream);
+
+    encoder.start();
+    encoder.setRepeat(0);
+    encoder.setDelay(delay);
+    encoder.setQuality(10);
+
+    for (let frame = 0; frame < frames; frame++) {
+      const frameCanvas = createCanvas(this.canvas.width, this.canvas.height);
+      const frameCtx = frameCanvas.getContext("2d");
+
+      // Copy lại base scene
+      frameCtx.drawImage(this.canvas, 0, 0);
+
+      move.updateFrame(frameCtx, frame);
+      encoder.addFrame(frameCtx);
+    }
+
+    encoder.finish();
+    console.log(`✅ Battle with move exported: ${outputPath}`);
+
+    await new Promise((resolve, reject) => {
+      writeStream.on('finish', () => {
+        console.log(`✅ stream finish: ${outputPath}`);
+        resolve(outputPath);
+      });
+
+      writeStream.on('error', reject);
     });
   }
 }

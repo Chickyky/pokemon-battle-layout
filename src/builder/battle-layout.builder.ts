@@ -25,7 +25,7 @@ export class BattleLayoutBuilder implements IBuilder {
     this.competitorBaseCircle = new BaseCircle({isCompetitor: true});
   }
 
-  static async create() {
+  static create(): BattleLayoutBuilder {
     const builder = new BattleLayoutBuilder();
     return builder;
   }

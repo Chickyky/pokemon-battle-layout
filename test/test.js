@@ -1,4 +1,4 @@
-const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector, RenderService, TextBox, BaseCircle } = require('./dist');
+const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector, RenderService, TextBox, BaseCircle } = require('../dist');
 
 ;(async function main() {
 	const trainer = new Trainer();
@@ -25,7 +25,7 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector
 	let layout = director.constructBattle();
 	const renderer = new RenderService(layout);
 
-	await renderer.renderImage(`${__dirname}/test.png`, layout);
+	await renderer.renderImage(`${__dirname}/test.png`);
 
 	builder
 		.setEnvironment(new Environment())
@@ -37,6 +37,7 @@ const { BattleLayoutBuilder, Environment, Trainer, Pokemon, BattleLayoutDirector
 		.setPokemon(new Pokemon({ isCompetitor: true }));
 
 	layout = director.constructBattle();
+	renderer.setLayout(layout);
 
 	await renderer.renderImage(`${__dirname}/test2.png`, layout);
 })();
