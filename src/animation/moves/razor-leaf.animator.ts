@@ -1,7 +1,11 @@
 import {CanvasRenderingContext2D} from 'canvas';
 
 import {SpriteManager} from '../sprite.manager';
-import {MoveAnimator, RectPosition} from '../move.animator';
+import {MoveAnimator} from '../move.animator';
+import {ProjectileRenderer} from '@/renderer/projectile.renderer';
+import {CurvedTrajectory} from '../trajectories';
+import { RectPoints, RectPosition } from '@/interface';
+import { getRectPoints } from '@/helpers';
 
 interface Leaf {
   x: number;
@@ -12,6 +16,8 @@ interface Leaf {
 
 export class RazorLeafAnimator extends MoveAnimator {
   private leaves: Leaf[];
+  private attackerRecPoints: RectPoints;
+  private defenderRecPoints: RectPoints;
 
   constructor(
     spriteManager: SpriteManager,
@@ -20,6 +26,9 @@ export class RazorLeafAnimator extends MoveAnimator {
     defenderPos: RectPosition
   ) {
     super(spriteManager, leafIndex, attackerPos, defenderPos);
+
+    this.attackerRecPoints = getRectPoints(attackerPos);
+    this.defenderRecPoints = getRectPoints(defenderPos);
 
     // Vector hướng từ attacker -> defender
     const dx = defenderPos.x - attackerPos.x;
@@ -47,7 +56,7 @@ export class RazorLeafAnimator extends MoveAnimator {
     ];
   }
 
-  updateFrame(ctx: CanvasRenderingContext2D, frame: number): void {
+  updateFrame_old(ctx: CanvasRenderingContext2D, frame: number): void {
     ctx.save();
 
     // Giới hạn vùng vẽ bằng toàn bộ canvas/frame
@@ -77,5 +86,25 @@ export class RazorLeafAnimator extends MoveAnimator {
     });
 
     ctx.restore();
+  }
+
+  updateFrame(ctx: CanvasRenderingContext2D, frame: number): void {
+    const totalFrames = 30;
+
+    const renderer = new ProjectileRenderer(
+      this.spriteManager,
+      new CurvedTrajectory()
+    );
+
+    renderer.renderProjectile(
+      ctx,
+      this.spriteIndex,
+      this.attackerRecPoints.center,
+      this.defenderRecPoints.center,
+      frame,
+      totalFrames,
+      32,
+      32
+    );
   }
 }

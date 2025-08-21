@@ -12,7 +12,7 @@ const  { SpriteManager, RazorLeafAnimator, Trainer, Pokemon, TextBox, BattleLayo
     /* const builder = new BattleLayoutBuilder(800, 800);
     */
 
-    const builder = await BattleLayoutBuilder.create();
+    const builder = BattleLayoutBuilder.create();
 
     builder
       .setTrainer(trainer)

@@ -2,10 +2,10 @@ import {Canvas, CanvasRenderingContext2D, createCanvas, registerFont} from 'canv
 import GIFEncoder from "gifencoder";
 import fs from "fs";
 
-import {BattleLayout} from './battle-layout';
 import {BaseCircle, Environment, Pokemon, TextBox, Trainer} from '@/components';
 import { resourceResolve } from '@/helpers';
-import { MoveAnimator } from '@/animation';
+import { MoveAnimator } from '@/animation/move.animator';
+import { BattleLayout } from '@/builder/battle-layout';
 
 export class RenderService {
   private canvas: Canvas;

@@ -1,12 +1,12 @@
-import { resourceResolve } from "@/helpers";
 import { loadImage, Image, CanvasRenderingContext2D } from "canvas";
+
+import { ImageFlyweightFactory } from "@/components/image.flyweight-factory";
+import { resourceResolve } from "@/helpers";
 
 /**
  * Flyweight: giữ 1 bản sprite sheet duy nhất để tái sử dụng
  */
 export class SpriteManager {
-  private static cache: Map<string, Image> = new Map();
-
   private image: Image;
   private spriteWidth: number;
   private spriteHeight: number;
@@ -24,17 +24,12 @@ export class SpriteManager {
    */
   static async load(
     path: string,
-    spriteWidth: number,
-    spriteHeight: number
+    spriteWidth?: number,
+    spriteHeight?: number
   ): Promise<SpriteManager> {
-    if (this.cache.has(path)) {
-      return new SpriteManager(this.cache.get(path)!, spriteWidth, spriteHeight);
-    }
-
 		path = resourceResolve(path);
 
-    const image = await loadImage(path);
-    this.cache.set(path, image);
+    const image = await ImageFlyweightFactory.getImage(path);
 
 		// return new SpriteManager(image, spriteWidth, spriteHeight);
 		return new SpriteManager(image, image.width, image.height);

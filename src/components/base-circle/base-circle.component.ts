@@ -6,8 +6,6 @@ import {BASE_CIRCLES} from '@components/resource.flat';
 
 import {IBaseCircle} from './base-circle.interface';
 
-// console.log('---> BASE_CIRCLES=', BASE_CIRCLES);
-
 export class BaseCircle extends BaseComponent {
   public isCompetitor: boolean = false;
   public id: string = '';

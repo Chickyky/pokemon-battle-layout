@@ -21,7 +21,7 @@ import {
   /* const builder = new BattleLayoutBuilder(800, 800);
    */
 
-  const builder = await BattleLayoutBuilder.create();
+  const builder = BattleLayoutBuilder.create();
 
   builder
     .setTrainer(trainer)
@@ -44,7 +44,7 @@ import {
     0,
     attackerRect,
     defenderRect
-  )/*   as unknown as MoveAnimator; */
+  ); /*   as unknown as MoveAnimator; */
 
   await renderer.renderGif(razorLeaf, 'razor_leaf.gif');
 })();

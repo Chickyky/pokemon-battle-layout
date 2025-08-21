@@ -1,15 +1,7 @@
-import { createCanvas, CanvasRenderingContext2D } from "canvas";
+import { CanvasRenderingContext2D } from 'canvas';
 
-
-import { SpriteManager } from "./sprite.manager";
-
-export type RectPosition = {
-  // x, y: top left
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { SpriteManager } from './sprite.manager';
+import { RectPosition } from '@/interface';
 
 export abstract class MoveAnimator {
   protected spriteManager: SpriteManager;
